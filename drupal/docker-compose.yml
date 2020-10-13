@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:11
+    volumes:
+      - pg:/var/lib/postgresql/data
+    networks:
+      - wp_net
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: start123
+    ports:
+      - '5432:5432' 
+
+  drupal:
+    image: drupal
+    networks:
+      - wp_net
+    ports:
+      - '80:80'
+    depends_on:
+      - 'db'
+    volumes:
+      - cms_modules:/var/www/html/modules
+      - cms_profiles:/var/www/html/profiles
+      - cms_themes:/var/www/html/themes
+      - cms_sites:/var/www/html/sites
+
+  adminer:
+    image: adminer
+    networks:
+      - wp_net
+    ports:
+      - '8080:8080'
+    depends_on:
+      - 'db'
+  
+  swissarmyknife:
+    image: bletvaska/swissarmyknife
+    networks:
+      - wp_net
+  
+volumes:
+  pg:
+  cms_modules:
+  cms_profiles:
+  cms_themes:
+  cms_sites:
+
+networks:
+  wp_net:
+

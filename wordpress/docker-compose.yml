@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  db:
+    image: mysql
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      - wp_net
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wp_user
+      MYSQL_PASSWORD: start123
+
+  wordpress:
+    image: wordpress
+    networks:
+      - wp_net
+    ports:
+      - '80:80'
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wp_user
+      WORDPRESS_DB_PASSWORD: start123
+      WORDPRESS_DB_NAME: wordpress
+    depends_on:
+      - 'db'
+
+  adminer:
+    image: adminer
+    networks:
+      - wp_net
+    ports:
+      - '8080:8080'
+    depends_on:
+      - 'db'
+
+volumes:
+  db:
+
+networks:
+  wp_net:
+
