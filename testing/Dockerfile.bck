@@ -1,0 +1,8 @@
+FROM alpine:latest
+RUN apk add apache2
+COPY src/index.html /usr/local/apache2/htdocs/
+COPY ./my-httpd.conf /usr/local/apache2/conf/httpd.conf
+EXPOSE 8080
+LABEL maintainer="Petrik"
+LABEL date="08.10.2020"
+CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
